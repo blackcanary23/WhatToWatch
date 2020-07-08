@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">WhatToWatch</string>
+    <string name="start_button">search</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="wonderful">Wonderful</string>
+    <string name="swipe_to_skip">"Skip  "</string>
+</resources>
