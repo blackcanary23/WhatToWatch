@@ -24,6 +24,9 @@ public class StartWindowFragment extends Fragment implements TextureView.Surface
     private OnFragmentInteractionListener mListener;
     private ArrayList<String> movieName = new ArrayList<>();
     private MediaPlayer mediaPlayer;
+    private int seek;
+    private SharedPreferences sPrefs;
+    protected int launchCtr;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,6 +41,7 @@ public class StartWindowFragment extends Fragment implements TextureView.Surface
 
                 mediaPlayer.stop();
                 updateFragment();
+                saveCounter();
             }
         });
 
@@ -59,6 +63,8 @@ public class StartWindowFragment extends Fragment implements TextureView.Surface
     @Override
     public void onStop() {
         super.onStop();
+        seek = mediaPlayer.getCurrentPosition(); //
+        saveSeek(); //
         mediaPlayer.stop();
     }
 
@@ -89,11 +95,13 @@ public class StartWindowFragment extends Fragment implements TextureView.Surface
 
         try {
             getMoviesList();
-            SharedPreferences sPrefs = Objects.requireNonNull(getActivity()).getPreferences(Context.MODE_PRIVATE);
-            int launchCtr = sPrefs.getInt("launch_ctr", 0);
-            Uri myVideoUri= Uri.parse( "android.resource://" + Objects.requireNonNull(getContext()).getPackageName() + "/raw/" + movieName.get(launchCtr));
+            loadCounter();
+            Uri myVideoUri= Uri.parse( "android.resource://" + Objects.requireNonNull(getContext()).getPackageName() + "/raw/" + movieName.get(launchCtr)); //
             mediaPlayer.setDataSource(Objects.requireNonNull(getActivity()), myVideoUri);
             mediaPlayer.prepare();
+
+            loadSeek();
+            mediaPlayer.seekTo(seek); //
             mediaPlayer.start();
 
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -102,6 +110,7 @@ public class StartWindowFragment extends Fragment implements TextureView.Surface
                 public void onCompletion(MediaPlayer mediaPlayer) {
 
                     updateFragment();
+                    saveCounter();
                 }
             });
         }
@@ -124,5 +133,37 @@ public class StartWindowFragment extends Fragment implements TextureView.Surface
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture arg0) {
 
+    }
+
+    void loadSeek() {
+
+        sPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        seek = sPrefs.getInt("seek",0);
+    }
+
+    void saveSeek() {
+
+        sPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor spEditor = sPrefs.edit();
+        spEditor.putInt("seek", seek);
+        spEditor.apply();
+    }
+
+    void loadCounter() {
+
+        sPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        launchCtr = sPrefs.getInt("launch_ctr",0);
+        if (launchCtr >= 17)
+            launchCtr = 0;
+        else
+            launchCtr++;
+    }
+
+    void saveCounter() {
+
+        sPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor spEditor = sPrefs.edit();
+        spEditor.putInt("launch_ctr", launchCtr);
+        spEditor.apply();
     }
 }

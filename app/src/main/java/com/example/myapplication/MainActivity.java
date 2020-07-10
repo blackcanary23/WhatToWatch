@@ -1,7 +1,9 @@
 package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -12,8 +14,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     private FilmSearchFragment fsFrag;
     private FilmDescriptionFragment fdFrag;
     private FragmentTransaction fTrans;
-    private SharedPreferences sPrefs;
-    protected int launchCtr;
     private ImageFragment iFrag;
 
     @Override
@@ -21,16 +21,23 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        loadCounter();
+        FragmentManager fm = getSupportFragmentManager();
+        //swFrag = (StartWindowFragment) fm.findFragmentByTag("swFrag");
+        if (fm.findFragmentByTag("swFrag") == null) {
+            //System.out.println("NILL!!!!!!!!!!!!!!!!");
+            Toast.makeText(this, "Swipe Left to Skip", Toast.LENGTH_LONG).show();
+            StartWindowFragment swFrag = new StartWindowFragment();
+            fTrans = getSupportFragmentManager().beginTransaction();
+            resetSeek();
+            fTrans.add(R.id.container, swFrag, "swFrag");
+            fTrans.commitAllowingStateLoss();
+        }
 
-        StartWindowFragment swFrag = new StartWindowFragment();
         fsFrag = new FilmSearchFragment();
         fdFrag = new FilmDescriptionFragment();
         iFrag = new ImageFragment();
 
-        fTrans = getSupportFragmentManager().beginTransaction();
-        fTrans.add(R.id.container, swFrag);
-        fTrans.commitAllowingStateLoss();
+
     }
 
     @Override
@@ -72,29 +79,12 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         fTrans.commitAllowingStateLoss();
     }
 
-    void loadCounter() {
+    void resetSeek() {
 
-        sPrefs = getPreferences(MODE_PRIVATE);
-        launchCtr = sPrefs.getInt("launch_ctr",0);
-        if (launchCtr >= 17)
-            launchCtr = 0;
-        else
-            launchCtr++;
-        Toast.makeText(this, "Swipe Left to Skip", Toast.LENGTH_LONG).show();
-    }
-
-    void saveCounter() {
-
-        sPrefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences sPrefs = getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor spEditor = sPrefs.edit();
-        spEditor.putInt("launch_ctr", launchCtr);
+        spEditor.putInt("seek", 0);
         spEditor.apply();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        saveCounter();
     }
 
     @Override
