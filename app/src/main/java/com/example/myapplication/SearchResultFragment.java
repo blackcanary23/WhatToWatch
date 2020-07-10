@@ -1,8 +1,8 @@
 package com.example.myapplication;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,8 +13,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-
 import java.util.ArrayList;
 
 
@@ -24,12 +22,7 @@ public class SearchResultFragment extends Fragment {
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private TextView textView;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-    }
+    private SharedPreferences sPrefs;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,6 +31,7 @@ public class SearchResultFragment extends Fragment {
         View view = inflater.inflate(R.layout.search_result_list, container, false);
         progressBar = view.findViewById(R.id.progressbar);
         textView = view.findViewById(R.id.pleasewait);
+        sPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
         recyclerView = view.findViewById(R.id.sr_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -102,10 +96,29 @@ public class SearchResultFragment extends Fragment {
                         textView.setVisibility(View.GONE);
                         DataAdapter dataAdapter = new DataAdapter(getActivity(), mRepList);
                         recyclerView.setAdapter(dataAdapter);
+                        //savemRepList(); //
                     }
                 });
             }
         });
         t.start();
+    }
+
+    void loadmRepList() {
+
+        //sPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        //mRepList = sPrefs.getInt("mRepLis",0);
+        progressBar.setVisibility(View.GONE);
+        textView.setVisibility(View.GONE);
+        DataAdapter dataAdapter = new DataAdapter(getActivity(), mRepList);
+        recyclerView.setAdapter(dataAdapter);
+    }
+
+    void savemRepList() {
+
+        //sPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor spEditor = sPrefs.edit();
+        //spEditor.putInt("mRepList", mRepList);
+        spEditor.apply();
     }
 }
