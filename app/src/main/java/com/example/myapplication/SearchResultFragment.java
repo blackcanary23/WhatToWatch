@@ -108,10 +108,12 @@ public class SearchResultFragment extends Fragment {
 
         //sPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
         //mRepList = sPrefs.getInt("mRepLis",0);
-        progressBar.setVisibility(View.GONE);
-        textView.setVisibility(View.GONE);
-        DataAdapter dataAdapter = new DataAdapter(getActivity(), mRepList);
-        recyclerView.setAdapter(dataAdapter);
+        //progressBar.setVisibility(View.GONE);
+        //textView.setVisibility(View.GONE);
+        //DataAdapter dataAdapter = new DataAdapter(getActivity(), mRepList);
+        //recyclerView.setAdapter(dataAdapter);
+
+        System.out.println("!!!!!!!!!!!!");
     }
 
     void savemRepList() {

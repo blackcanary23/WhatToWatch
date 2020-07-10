@@ -14,6 +14,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     private FilmSearchFragment fsFrag;
     private FilmDescriptionFragment fdFrag;
     private FragmentTransaction fTrans;
+    private SearchResultFragment srFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +33,9 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         }
 
         if (fm.findFragmentByTag("srFrag") != null) {
-            SearchResultFragment srFrag = new SearchResultFragment();
+            srFrag = new SearchResultFragment();
             fTrans = getSupportFragmentManager().beginTransaction();
-            //srFrag.loadmRepList();
+            srFrag.loadmRepList();
             fTrans.replace(R.id.container, srFrag, "srFrag");
             fTrans.addToBackStack(null);
             fTrans.commitAllowingStateLoss();
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     @Override
     public void onSecondItemClicked(FilmSearchRepository fsRepository) {
 
-        SearchResultFragment srFrag = new SearchResultFragment();
+        srFrag = new SearchResultFragment();
         fTrans = getSupportFragmentManager().beginTransaction();
         srFrag.getMoviesList(fsRepository.getName());
         fTrans.replace(R.id.container, srFrag, "srFrag");
