@@ -10,15 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
 
 
 public class FilmDescriptionFragment extends Fragment {
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-    }
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -29,7 +24,6 @@ public class FilmDescriptionFragment extends Fragment {
         WebView browser = view.findViewById(R.id.webBrowser);
         browser.getSettings().setJavaScriptEnabled(true);
 
-        //browser.getSettings().setDomStorageEnabled(true);
         browser.getSettings().setSupportZoom(true);
         browser.getSettings().setBuiltInZoomControls(true);
 
@@ -38,11 +32,13 @@ public class FilmDescriptionFragment extends Fragment {
         assert bundle != null;
         String imdb = (String) bundle.getSerializable("data");
 
-        //browser.setWebViewClient(new WebViewClient());
-        //WebView.setWebContentsDebuggingEnabled(true);
-
         browser.loadUrl(imdb);
-
+        //browser.setWebViewClient(new WebViewClient());
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 }

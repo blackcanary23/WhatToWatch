@@ -6,19 +6,19 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener, DataAdapter.ItemClicked, FilmSearchAdapter.ItemClicked {
 
-    private FilmSearchFragment fsFrag;
-    private FilmDescriptionFragment fdFrag;
     private FragmentTransaction fTrans;
     private SearchResultFragment srFrag;
     private FragmentManager fm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -33,13 +33,14 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
             fTrans.commitAllowingStateLoss();
         }
 
-        fsFrag = new FilmSearchFragment();
-        fdFrag = new FilmDescriptionFragment();
+        //fsFrag = new FilmSearchFragment();
+        //fdFrag = new FilmDescriptionFragment();
     }
 
     @Override
     public void onFirstFragmentInteraction() {
 
+        FilmSearchFragment fsFrag = new FilmSearchFragment();
         fTrans = getSupportFragmentManager().beginTransaction();
         fTrans.replace(R.id.container, fsFrag);
         fTrans.addToBackStack(null);
@@ -49,9 +50,11 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     @Override
     public void onItemClicked(MoviesRepository moviesRepository) {
 
+        FilmDescriptionFragment fdFrag = new FilmDescriptionFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("data", moviesRepository.getImdb());
         fdFrag.setArguments(bundle);
+
         fTrans = getSupportFragmentManager().beginTransaction();
 
         if (fdFrag.isAdded()) {
@@ -109,11 +112,22 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     protected void onSaveInstanceState(Bundle outState) {
 
         super.onSaveInstanceState(outState);
-        fm.putFragment(outState, "SearchResultFragment", srFrag);
+        if (fm.findFragmentByTag("srFrag") != null)
+            fm.putFragment(outState, "SearchResultFragment", srFrag);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle inState) {
-        instantiateFragments(inState);
+
+        if (fm.findFragmentByTag("srFrag") != null)
+            instantiateFragments(inState);
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        if (fm.findFragmentByTag("fdFrag") != null) {
+            getSupportFragmentManager().beginTransaction().remove(fm.findFragmentByTag("fdFrag")).commit();
+        }
     }
 }
