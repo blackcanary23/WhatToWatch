@@ -15,29 +15,21 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     private FilmDescriptionFragment fdFrag;
     private FragmentTransaction fTrans;
     private SearchResultFragment srFrag;
+    private FragmentManager fm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FragmentManager fm = getSupportFragmentManager();
-        //swFrag = (StartWindowFragment) fm.findFragmentByTag("swFrag");
+        fm = getSupportFragmentManager();
+
         if (fm.findFragmentByTag("swFrag") == null) {
             Toast.makeText(this, "Swipe Left to Skip", Toast.LENGTH_LONG).show();
             StartWindowFragment swFrag = new StartWindowFragment();
             fTrans = getSupportFragmentManager().beginTransaction();
             resetSeek();
             fTrans.add(R.id.container, swFrag, "swFrag");
-            fTrans.commitAllowingStateLoss();
-        }
-
-        if (fm.findFragmentByTag("srFrag") != null) {
-            srFrag = new SearchResultFragment();
-            fTrans = getSupportFragmentManager().beginTransaction();
-            srFrag.loadmRepList();
-            fTrans.replace(R.id.container, srFrag, "srFrag");
-            fTrans.addToBackStack(null);
             fTrans.commitAllowingStateLoss();
         }
 
@@ -69,15 +61,13 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         fTrans.add(fdFrag, "fdFrag");
 
         fTrans.commitAllowingStateLoss();
-
-        System.out.println("HELLOOOOOO");
     }
 
     @Override
     public void onSecondItemClicked(FilmSearchRepository fsRepository) {
 
         srFrag = new SearchResultFragment();
-        fTrans = getSupportFragmentManager().beginTransaction();
+        fTrans = fm.beginTransaction();
         srFrag.getMoviesList(fsRepository.getName());
         fTrans.replace(R.id.container, srFrag, "srFrag");
         fTrans.addToBackStack(null);
@@ -95,14 +85,35 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     @Override
     public void onBackPressed() {
 
-        int count = getSupportFragmentManager().getBackStackEntryCount();
+        int count = fm.getBackStackEntryCount();
 
         if (count == 1) {
-            super.onBackPressed();
-            super.onBackPressed();
+            finish();
         }
         else {
             super.onBackPressed();
         }
+    }
+
+    private void instantiateFragments(Bundle inState) {
+
+        fTrans = fm.beginTransaction();
+
+        if (inState != null) {
+            srFrag = (SearchResultFragment) fm.getFragment(inState, "SearchResultFragment");
+            srFrag.loadmRepList();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+        super.onSaveInstanceState(outState);
+        fm.putFragment(outState, "SearchResultFragment", srFrag);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle inState) {
+        instantiateFragments(inState);
     }
 }

@@ -1,7 +1,5 @@
 package com.example.myapplication;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,16 +20,15 @@ public class SearchResultFragment extends Fragment {
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private TextView textView;
-    private SharedPreferences sPrefs;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.search_result_list, container, false);
+
         progressBar = view.findViewById(R.id.progressbar);
         textView = view.findViewById(R.id.pleasewait);
-        sPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
         recyclerView = view.findViewById(R.id.sr_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -81,6 +78,7 @@ public class SearchResultFragment extends Fragment {
 
                         mRepList.add(new MoviesRepository(id, name, year, rate, logo, image, imdb));
                     }
+                    savemRepList();
                 }
                 catch (Exception e) {
                     System.out.println("Error : " + e.getMessage() + "\n");
@@ -96,7 +94,6 @@ public class SearchResultFragment extends Fragment {
                         textView.setVisibility(View.GONE);
                         DataAdapter dataAdapter = new DataAdapter(getActivity(), mRepList);
                         recyclerView.setAdapter(dataAdapter);
-                        //savemRepList(); //
                     }
                 });
             }
@@ -106,21 +103,19 @@ public class SearchResultFragment extends Fragment {
 
     void loadmRepList() {
 
-        //sPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
-        //mRepList = sPrefs.getInt("mRepLis",0);
-        //progressBar.setVisibility(View.GONE);
-        //textView.setVisibility(View.GONE);
-        //DataAdapter dataAdapter = new DataAdapter(getActivity(), mRepList);
-        //recyclerView.setAdapter(dataAdapter);
-
-        System.out.println("!!!!!!!!!!!!");
+        Bundle bundle = getArguments();
+        assert bundle != null;
+        ArrayList<MoviesRepository> rl = (ArrayList<MoviesRepository>) bundle.getSerializable("mRepList");
+        progressBar.setVisibility(View.GONE);
+        textView.setVisibility(View.GONE);
+        DataAdapter dataAdapter = new DataAdapter(getActivity(), rl);
+        recyclerView.setAdapter(dataAdapter);
     }
 
     void savemRepList() {
 
-        //sPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor spEditor = sPrefs.edit();
-        //spEditor.putInt("mRepList", mRepList);
-        spEditor.apply();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("mRepList", mRepList);
+        setArguments(bundle);
     }
 }
