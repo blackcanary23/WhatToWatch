@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:text="2000 "
                 android:textSize="20sp"
-                app:layout_constraintStart_toEndOf="@+id/movie_name"
+                app:layout_constraintEnd_toStartOf="@+id/rated"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -64,7 +64,7 @@
                 android:textSize="20sp"
                 android:text="R"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/year" />
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <TextView
                 android:id="@+id/description"

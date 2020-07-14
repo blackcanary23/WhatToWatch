@@ -16,6 +16,7 @@ public class FilmSearchAdapter extends RecyclerView.Adapter<FilmSearchAdapter.Vi
 
     private ArrayList<FilmSearchRepository> movie;
     private FilmSearchAdapter.ItemClicked activity;
+    private String showName;
 
     public interface ItemClicked {
 
@@ -40,8 +41,9 @@ public class FilmSearchAdapter extends RecyclerView.Adapter<FilmSearchAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull FilmSearchAdapter.ViewHolder holder, int position) {
 
+        editMovieName(position);
         holder.itemView.setTag(movie.get(position));
-        holder.name.setText(movie.get(position).getName() + " ");
+        holder.name.setText(showName + " ");
         holder.image.setImageResource(movie.get(position).getImage());
     }
 
@@ -49,6 +51,27 @@ public class FilmSearchAdapter extends RecyclerView.Adapter<FilmSearchAdapter.Vi
     public int getItemCount() {
 
         return movie.size();
+    }
+
+    public void editMovieName(int position) {
+
+        showName = movie.get(position).getName().replace("-", " ");
+        if (showName.contains("1970 1979"))
+            showName = showName.replace("1970 1979", "70's");
+        else if (showName.contains("1980 1989"))
+            showName = showName.replace("1980 1989", "80's");
+        else if (showName.contains("1990 1999"))
+            showName = showName.replace("1990 1999", "90's");
+        else if (showName.contains("2000 2009"))
+            showName = showName.replace("2000 2009", "2000's");
+        else if (showName.contains("2010 2019"))
+            showName = showName.replace("2010 2019", "2010's");
+        else if (showName.contains("sci fi"))
+            showName = showName.replace("sci fi", "sci-fi");
+        else if (showName.contains("cannes"))
+            showName = showName.replace(showName, "cannes winners");
+        else if (showName.contains("oscar"))
+            showName = showName.replace(showName, "oscar winners");
     }
 
 
