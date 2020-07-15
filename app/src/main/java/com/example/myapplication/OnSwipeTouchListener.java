@@ -8,17 +8,20 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
+
 public class OnSwipeTouchListener implements OnTouchListener {
 
     private final GestureDetector gestureDetector;
 
-    public OnSwipeTouchListener (Context ctx){
-        gestureDetector = new GestureDetector(ctx, new GestureListener());
+    public OnSwipeTouchListener (Context context) {
+
+        gestureDetector = new GestureDetector(context, new GestureListener());
     }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
+    public boolean onTouch(View view, MotionEvent event) {
+
         return gestureDetector.onTouchEvent(event);
     }
 
@@ -28,13 +31,16 @@ public class OnSwipeTouchListener implements OnTouchListener {
         private static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
         @Override
-        public boolean onDown(MotionEvent e) {
+        public boolean onDown(MotionEvent event) {
+
             return true;
         }
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
             boolean result = false;
+
             try {
                 float diffY = e2.getY() - e1.getY();
                 float diffX = e2.getX() - e1.getX();
@@ -64,14 +70,18 @@ public class OnSwipeTouchListener implements OnTouchListener {
     }
 
     public void onSwipeRight() {
+
     }
 
     public void onSwipeLeft() {
+
     }
 
     public void onSwipeTop() {
+
     }
 
     public void onSwipeBottom() {
+
     }
 }

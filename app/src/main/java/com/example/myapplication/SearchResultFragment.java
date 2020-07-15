@@ -48,33 +48,43 @@ public class SearchResultFragment extends Fragment {
                     String url="https://goodmovieslist.com/best-movies/" + urlName + ".html";
                     Document doc = Jsoup.connect(url)
                             .header("Accept-Encoding", "gzip, deflate")
-                            .userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0")
+                            .userAgent("Mozilla/5.0 " +
+                                    "(Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0")
                             .maxBodySize(0)
                             .timeout(60000000)
                             .get();
 
-                    int size = doc.select("span[class=list_movie_localized_name Undefined]").size();
+                    int size = doc.select(
+                            "span[class=list_movie_localized_name Undefined]").size();
 
                     for (int i = 0, j = 0; i < size; i++) {
-                        id = doc.select("p[class=list_movie_name]").eq(i).text().split(" ")[0]; //!!
-                        name = doc.select("span[class=list_movie_localized_name Undefined]").eq(i).text();
+                        id = doc.select("p[class=list_movie_name]").eq(i).text().split(
+                                " ")[0];
+                        name = doc.select(
+                                "span[class=list_movie_localized_name Undefined]").eq(i).
+                                text();
                         year = doc.select("span[itemprop=datePublished]").eq(i).text();
 
-                        query = "a[onmousedown=_gaq.push(['_trackEvent', 'External', 'IMDb', '" + name.replace("'", "") + "']);]";
+                        query = "a[onmousedown=_gaq.push(['_trackEvent', 'External', 'IMDb', '" +
+                                name.replace("'", "") + "']);]";
                         imdb = doc.select(query).attr("href");
 
-                        if (doc.select("span[itemprop=ratingValue]").eq(i).hasAttr("content"))
-                            rate = doc.select("span[itemprop=ratingValue]").eq(i).attr("content");
+                        if (doc.select("span[itemprop=ratingValue]").eq(i).hasAttr(
+                                "content"))
+                            rate = doc.select("span[itemprop=ratingValue]").eq(i).attr(
+                                    "content");
                         else
                             rate = "";
 
                         logo = doc.select("p[class=list_movie_tagline]").eq(j).text();
-                        if (!doc.select("tr[itemtype=http://schema.org/Movie]").eq(i).text().contains(logo))
+                        if (!doc.select("tr[itemtype=http://schema.org/Movie]").eq(i).
+                                text().contains(logo))
                             logo = "";
                         else
                             j++;
 
-                        image = "https://goodmovieslist.com/best-movies/" + doc.select("img[class=poster]").eq(i).attr("src");
+                        image = "https://goodmovieslist.com/best-movies/" + doc.select(
+                                "img[class=poster]").eq(i).attr("src");
 
                         mRepList.add(new MoviesRepository(id, name, year, rate, logo, image, imdb));
                     }
@@ -92,8 +102,9 @@ public class SearchResultFragment extends Fragment {
 
                         progressBar.setVisibility(View.GONE);
                         textView.setVisibility(View.GONE);
-                        DataAdapter dataAdapter = new DataAdapter(getActivity(), mRepList);
-                        recyclerView.setAdapter(dataAdapter);
+                        SearchResultAdapter srAdapter = new SearchResultAdapter(getActivity(),
+                                mRepList);
+                        recyclerView.setAdapter(srAdapter);
                     }
                 });
             }
@@ -101,15 +112,17 @@ public class SearchResultFragment extends Fragment {
         t.start();
     }
 
+    @SuppressWarnings("unchecked")
     void loadmRepList() {
 
         Bundle bundle = getArguments();
         assert bundle != null;
-        ArrayList<MoviesRepository> rl = (ArrayList<MoviesRepository>) bundle.getSerializable("mRepList");
+        mRepList = (ArrayList<MoviesRepository>) bundle.getSerializable(
+                "mRepList");
         progressBar.setVisibility(View.GONE);
         textView.setVisibility(View.GONE);
-        DataAdapter dataAdapter = new DataAdapter(getActivity(), rl);
-        recyclerView.setAdapter(dataAdapter);
+        SearchResultAdapter srAdapter = new SearchResultAdapter(getActivity(), mRepList);
+        recyclerView.setAdapter(srAdapter);
     }
 
     void savemRepList() {

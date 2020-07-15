@@ -13,25 +13,25 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 
-public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
+public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.ViewHolder> {
 
-    private ArrayList<MoviesRepository> movie;
-    private ItemClicked activity;
+    private ArrayList<MoviesRepository> movieRepList;
+    private MovieClicked activity;
 
-    public interface ItemClicked {
+    public interface MovieClicked {
 
-        void onItemClicked(MoviesRepository moviesRepository);
+        void onMovieClicked(MoviesRepository moviesRepository);
     }
 
-    public DataAdapter(Context context, ArrayList<MoviesRepository> movie) {
+    public SearchResultAdapter(Context context, ArrayList<MoviesRepository> movieRepList) {
 
-        this.movie = movie;
-        activity = (ItemClicked) context;
+        this.movieRepList = movieRepList;
+        activity = (MovieClicked) context;
     }
 
     @NonNull
     @Override
-    public DataAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SearchResultAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_result, parent, false);
         return new ViewHolder(view);
@@ -39,21 +39,21 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull DataAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SearchResultAdapter.ViewHolder holder, int position) {
 
-        holder.itemView.setTag(movie.get(position));
-        holder.id.setText(movie.get(position).getId() + " ");
-        holder.name.setText(movie.get(position).getName() + " ");
-        holder.year.setText(movie.get(position).getYear() + " ");
-        holder.rate.setText(movie.get(position).getRate());
-        holder.logo.setText(movie.get(position).getLogo());
-        Picasso.get().load(movie.get(position).getImage()).into(holder.image);
+        holder.itemView.setTag(movieRepList.get(position));
+        holder.id.setText(movieRepList.get(position).getId() + " ");
+        holder.name.setText(movieRepList.get(position).getName() + " ");
+        holder.year.setText(movieRepList.get(position).getYear() + " ");
+        holder.rate.setText(movieRepList.get(position).getRate());
+        holder.logo.setText(movieRepList.get(position).getLogo());
+        Picasso.get().load(movieRepList.get(position).getImage()).into(holder.image);
     }
 
     @Override
     public int getItemCount() {
 
-        return movie.size();
+        return movieRepList.size();
     }
 
 
@@ -82,7 +82,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 @Override
                 public void onClick(View view) {
 
-                    activity.onItemClicked(movie.get(getAdapterPosition()));
+                    activity.onMovieClicked(movieRepList.get(getAdapterPosition()));
 
                 }
             });

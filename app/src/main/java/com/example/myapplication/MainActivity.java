@@ -1,20 +1,24 @@
 package com.example.myapplication;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.widget.Toast;
+import java.util.Objects;
 
 
-public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener, DataAdapter.ItemClicked, FilmSearchAdapter.ItemClicked {
+public class MainActivity extends AppCompatActivity implements StartWindowListener,
+        SearchResultAdapter.MovieClicked, FilmSearchAdapter.GenreClicked {
 
     private FragmentTransaction fTrans;
     private SearchResultFragment srFrag;
-    private FragmentManager fm;
+    private FilmSearchFragment fsFrag;
+    private FragmentManager fMan;
+    private StartWindowFragment swFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,56 +26,52 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        fm = getSupportFragmentManager();
+        fMan = getSupportFragmentManager();
 
-        if (fm.findFragmentByTag("swFrag") == null) {
+        if (fMan.findFragmentByTag("swFrag") == null) {
             Toast.makeText(this, "Swipe Left to Skip", Toast.LENGTH_LONG).show();
-            StartWindowFragment swFrag = new StartWindowFragment();
-            fTrans = getSupportFragmentManager().beginTransaction();
+            swFrag = new StartWindowFragment();
+            fTrans = fMan.beginTransaction();
             resetSeek();
             fTrans.add(R.id.container, swFrag, "swFrag");
             fTrans.commitAllowingStateLoss();
         }
-
-        //fsFrag = new FilmSearchFragment();
-        //fdFrag = new FilmDescriptionFragment();
     }
 
     @Override
-    public void onFirstFragmentInteraction() {
+    public void onStartWindowListener() {
 
-        FilmSearchFragment fsFrag = new FilmSearchFragment();
-        fTrans = getSupportFragmentManager().beginTransaction();
-        fTrans.replace(R.id.container, fsFrag);
+        fsFrag = new FilmSearchFragment();
+        fTrans = fMan.beginTransaction();
+        fTrans.replace(R.id.container, fsFrag, "fsFrag");
         fTrans.addToBackStack(null);
         fTrans.commitAllowingStateLoss();
     }
 
     @Override
-    public void onItemClicked(MoviesRepository moviesRepository) {
+    public void onMovieClicked(MoviesRepository moviesRepository) {
 
         FilmDescriptionFragment fdFrag = new FilmDescriptionFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("data", moviesRepository.getImdb());
+        bundle.putSerializable("imdb", moviesRepository.getImdb());
         fdFrag.setArguments(bundle);
 
-        fTrans = getSupportFragmentManager().beginTransaction();
+        fTrans = fMan.beginTransaction();
 
         if (fdFrag.isAdded()) {
             fTrans.remove(fdFrag);
         }
 
         fTrans.add(fdFrag, "fdFrag");
-
         fTrans.commitAllowingStateLoss();
     }
 
     @Override
-    public void onSecondItemClicked(FilmSearchRepository fsRepository) {
+    public void onGenreClicked(GenreRepository genreRepository) {
 
         srFrag = new SearchResultFragment();
-        fTrans = fm.beginTransaction();
-        srFrag.getMoviesList(fsRepository.getName());
+        fTrans = fMan.beginTransaction();
+        srFrag.getMoviesList(genreRepository.getName());
         fTrans.replace(R.id.container, srFrag, "srFrag");
         fTrans.addToBackStack(null);
         fTrans.commitAllowingStateLoss();
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     @Override
     public void onBackPressed() {
 
-        int count = fm.getBackStackEntryCount();
+        int count = fMan.getBackStackEntryCount();
 
         if (count == 1) {
             finish();
@@ -100,34 +100,57 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
 
     private void instantiateFragments(Bundle inState) {
 
-        fTrans = fm.beginTransaction();
+        fTrans = fMan.beginTransaction();
 
-        if (inState != null) {
-            srFrag = (SearchResultFragment) fm.getFragment(inState, "SearchResultFragment");
+        if (inState.get("SearchResultFragment") != null) {
+            srFrag = (SearchResultFragment) fMan.getFragment(inState, "SearchResultFragment");
+            assert srFrag != null;
             srFrag.loadmRepList();
+        }
+        else if (inState.get("FilmSearchFragment") != null) {
+            fsFrag = (FilmSearchFragment) fMan.getFragment(inState, "FilmSearchFragment");
+            assert fsFrag != null;
+            fsFrag.loadgRepList();
+        }
+        else if (inState.get("StartWindowFragment") != null) {
+            swFrag = (StartWindowFragment) fMan.getFragment(inState, "StartWindowFragment");
+            assert swFrag != null;
+            swFrag.loadSeek();
         }
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
 
         super.onSaveInstanceState(outState);
-        if (fm.findFragmentByTag("srFrag") != null)
-            fm.putFragment(outState, "SearchResultFragment", srFrag);
+        srFrag = (SearchResultFragment) fMan.findFragmentByTag("srFrag");
+        fsFrag = (FilmSearchFragment) fMan.findFragmentByTag("fsFrag");
+        swFrag = (StartWindowFragment) fMan.findFragmentByTag("swFrag");
+        if (srFrag != null)
+            fMan.putFragment(outState, "SearchResultFragment", srFrag);
+        else if (fsFrag != null)
+            fMan.putFragment(outState, "FilmSearchFragment", fsFrag);
+        else if (swFrag != null)
+            fMan.putFragment(outState, "StartWindowFragment", swFrag);
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle inState) {
+    protected void onRestoreInstanceState(@NonNull Bundle inState) {
 
-        if (fm.findFragmentByTag("srFrag") != null)
+        if (fMan.findFragmentByTag("srFrag") != null)
+            instantiateFragments(inState);
+        else if (fMan.findFragmentByTag("fsFrag") != null)
+            instantiateFragments(inState);
+        else if (fMan.findFragmentByTag("swFrag") != null)
             instantiateFragments(inState);
     }
 
     @Override
     protected void onPause(){
         super.onPause();
-        if (fm.findFragmentByTag("fdFrag") != null) {
-            getSupportFragmentManager().beginTransaction().remove(fm.findFragmentByTag("fdFrag")).commit();
+        if (fMan.findFragmentByTag("fdFrag") != null) {
+            fMan.beginTransaction().remove(Objects.requireNonNull(fMan.findFragmentByTag("fdFrag"))).
+                    commit();
         }
     }
 }

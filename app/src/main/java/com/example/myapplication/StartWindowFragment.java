@@ -21,12 +21,12 @@ import java.util.Objects;
 
 public class StartWindowFragment extends Fragment implements TextureView.SurfaceTextureListener {
 
-    private OnFragmentInteractionListener mListener;
-    private ArrayList<String> movieName = new ArrayList<>();
+    private StartWindowListener swListener;
+    private ArrayList<String> movieNameList = new ArrayList<>();
     private MediaPlayer mediaPlayer;
     private int seek;
     private SharedPreferences sPrefs;
-    protected int launchCtr;
+    private int launchCtr;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,7 +38,6 @@ public class StartWindowFragment extends Fragment implements TextureView.Surface
 
         view.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
             public void onSwipeLeft() {
-
                 mediaPlayer.stop();
                 updateFragment();
                 saveCounter();
@@ -52,38 +51,30 @@ public class StartWindowFragment extends Fragment implements TextureView.Surface
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            mListener = (OnFragmentInteractionListener) context;
+            swListener = (StartWindowListener) context;
         }
         catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " should implement OnFragmentInteractionListener");
+                    + " should implement StartWindowListener");
         }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        seek = mediaPlayer.getCurrentPosition(); //
-        saveSeek(); //
-        mediaPlayer.stop();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        swListener = null;
     }
 
     public void updateFragment() {
 
-        mListener.onFirstFragmentInteraction();
+        swListener.onStartWindowListener();
     }
 
     public void getMoviesList() {
 
         Field[] fields = R.raw.class.getFields();
         for (Field field : fields) {
-            movieName.add(FilenameUtils.removeExtension(field.getName()));
+            movieNameList.add(FilenameUtils.removeExtension(field.getName()));
         }
     }
 
@@ -96,12 +87,12 @@ public class StartWindowFragment extends Fragment implements TextureView.Surface
         try {
             getMoviesList();
             loadCounter();
-            Uri myVideoUri= Uri.parse( "android.resource://" + Objects.requireNonNull(getContext()).getPackageName() + "/raw/" + movieName.get(launchCtr)); //
-            mediaPlayer.setDataSource(Objects.requireNonNull(getActivity()), myVideoUri);
+            Uri uri = Uri.parse( "android.resource://" + Objects.requireNonNull(getContext()).
+                    getPackageName() + "/raw/" + movieNameList.get(launchCtr));
+            mediaPlayer.setDataSource(Objects.requireNonNull(getActivity()), uri);
             mediaPlayer.prepare();
-
-            loadSeek();
-            mediaPlayer.seekTo(seek); //
+            if (seek != 0)
+                mediaPlayer.seekTo(seek + 3000);
             mediaPlayer.start();
 
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -120,6 +111,15 @@ public class StartWindowFragment extends Fragment implements TextureView.Surface
     }
 
     @Override
+    public void onPause() {
+
+        super.onPause();
+        mediaPlayer.pause();
+        seek = mediaPlayer.getCurrentPosition();
+        saveSeek();
+    }
+
+    @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture arg0) {
 
         return false;
@@ -127,32 +127,31 @@ public class StartWindowFragment extends Fragment implements TextureView.Surface
 
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture arg0, int arg1, int arg2) {
-
     }
 
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture arg0) {
-
     }
 
     void loadSeek() {
 
-        sPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
-        seek = sPrefs.getInt("seek",0);
+        Bundle bundle = getArguments();
+        assert bundle != null;
+        seek = bundle.getInt("seek");
     }
 
     void saveSeek() {
 
-        sPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor spEditor = sPrefs.edit();
-        spEditor.putInt("seek", seek);
-        spEditor.apply();
+        Bundle bundle = new Bundle();
+        bundle.putInt("seek", seek);
+        setArguments(bundle);
     }
 
     void loadCounter() {
 
-        sPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        sPrefs = Objects.requireNonNull(getActivity()).getPreferences(Context.MODE_PRIVATE);
         launchCtr = sPrefs.getInt("launch_ctr",0);
+
         if (launchCtr >= 17)
             launchCtr = 0;
         else
@@ -161,7 +160,7 @@ public class StartWindowFragment extends Fragment implements TextureView.Surface
 
     void saveCounter() {
 
-        sPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        sPrefs = Objects.requireNonNull(getActivity()).getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor spEditor = sPrefs.edit();
         spEditor.putInt("launch_ctr", launchCtr);
         spEditor.apply();

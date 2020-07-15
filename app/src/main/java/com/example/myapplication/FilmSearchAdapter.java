@@ -14,19 +14,19 @@ import java.util.ArrayList;
 
 public class FilmSearchAdapter extends RecyclerView.Adapter<FilmSearchAdapter.ViewHolder> {
 
-    private ArrayList<FilmSearchRepository> movie;
-    private FilmSearchAdapter.ItemClicked activity;
+    private ArrayList<GenreRepository> gRepList;
+    private GenreClicked activity;
     private String showName;
 
-    public interface ItemClicked {
+    public interface GenreClicked {
 
-        void onSecondItemClicked(FilmSearchRepository fsRepository);
+        void onGenreClicked(GenreRepository fsRepository);
     }
 
-    public FilmSearchAdapter(Context context, ArrayList<FilmSearchRepository> movie) {
+    public FilmSearchAdapter(Context context, ArrayList<GenreRepository> gRepList) {
 
-        this.movie = movie;
-        activity = (FilmSearchAdapter.ItemClicked) context;
+        this.gRepList = gRepList;
+        activity = (GenreClicked) context;
     }
 
     @NonNull
@@ -42,20 +42,20 @@ public class FilmSearchAdapter extends RecyclerView.Adapter<FilmSearchAdapter.Vi
     public void onBindViewHolder(@NonNull FilmSearchAdapter.ViewHolder holder, int position) {
 
         editMovieName(position);
-        holder.itemView.setTag(movie.get(position));
+        holder.itemView.setTag(gRepList.get(position));
         holder.name.setText(showName + " ");
-        holder.image.setImageResource(movie.get(position).getImage());
+        holder.image.setImageResource(gRepList.get(position).getImage());
     }
 
     @Override
     public int getItemCount() {
 
-        return movie.size();
+        return gRepList.size();
     }
 
     public void editMovieName(int position) {
 
-        showName = movie.get(position).getName().replace("-", " ");
+        showName = gRepList.get(position).getName().replace("-", " ");
         if (showName.contains("1970 1979"))
             showName = showName.replace("1970 1979", "70's");
         else if (showName.contains("1980 1989"))
@@ -92,7 +92,7 @@ public class FilmSearchAdapter extends RecyclerView.Adapter<FilmSearchAdapter.Vi
                 @Override
                 public void onClick(View view) {
 
-                    activity.onSecondItemClicked(movie.get(getAdapterPosition()));
+                    activity.onGenreClicked(gRepList.get(getAdapterPosition()));
 
                 }
             });

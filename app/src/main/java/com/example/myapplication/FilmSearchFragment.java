@@ -16,28 +16,21 @@ import java.util.ArrayList;
 
 public class FilmSearchFragment extends Fragment {
 
-    private ArrayList<FilmSearchRepository> mRepList = new ArrayList<>();
-    private RecyclerView recyclerView;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-    }
+    private ArrayList<GenreRepository> gRepList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_list, container, false);
-        recyclerView = view.findViewById(R.id.list);
+        RecyclerView recyclerView = view.findViewById(R.id.list);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
             recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
         else
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        FilmSearchAdapter fsAdapter = new FilmSearchAdapter(getActivity(), mRepList);
+        FilmSearchAdapter fsAdapter = new FilmSearchAdapter(getActivity(), gRepList);
         recyclerView.setAdapter(fsAdapter);
 
         return view;
@@ -60,9 +53,26 @@ public class FilmSearchFragment extends Fragment {
             name = field.getName();
 
             if (name.contains("best") || name.contains("cannes") || name.contains("new")) {
-                image = getResources().getIdentifier(name, "drawable", "com.example.myapplication");
-                mRepList.add(new FilmSearchRepository(name.replace("_", "-"), image));
+                image = getResources().getIdentifier(name, "drawable",
+                        "com.example.myapplication");
+                gRepList.add(new GenreRepository(name.replace("_", "-"), image));
             }
         }
+        savegRepList();
+    }
+
+    @SuppressWarnings("unchecked")
+    void loadgRepList() {
+
+        Bundle bundle = getArguments();
+        assert bundle != null;
+        gRepList = (ArrayList<GenreRepository>) bundle.getSerializable("fsList");
+    }
+
+    void savegRepList() {
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("fsList", gRepList);
+        setArguments(bundle);
     }
 }
