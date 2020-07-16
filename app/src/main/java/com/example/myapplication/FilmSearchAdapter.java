@@ -31,9 +31,11 @@ public class FilmSearchAdapter extends RecyclerView.Adapter<FilmSearchAdapter.Vi
 
     @NonNull
     @Override
-    public FilmSearchAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FilmSearchAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
+                                                           int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.film_search, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.film_search, parent, false);
         return new FilmSearchAdapter.ViewHolder(view);
     }
 

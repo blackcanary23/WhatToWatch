@@ -4,8 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -20,7 +18,6 @@ public class MainActivity extends AppCompatActivity implements StartWindowListen
     private SearchResultFragment srFrag;
     private FilmSearchFragment fsFrag;
     private FragmentManager fMan;
-    private StartWindowFragment swFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +28,10 @@ public class MainActivity extends AppCompatActivity implements StartWindowListen
         fMan = getSupportFragmentManager();
 
         if (fMan.findFragmentByTag("swFrag") == null) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             Toast.makeText(this, "Swipe Left to Skip", Toast.LENGTH_LONG).show();
-            swFrag = new StartWindowFragment();
+            StartWindowFragment swFrag = new StartWindowFragment();
             fTrans = fMan.beginTransaction();
-            resetSeek();
             fTrans.add(R.id.container, swFrag, "swFrag");
             fTrans.commitAllowingStateLoss();
         }
@@ -85,14 +82,6 @@ public class MainActivity extends AppCompatActivity implements StartWindowListen
         fTrans.commitAllowingStateLoss();
     }
 
-    void resetSeek() {
-
-        SharedPreferences sPrefs = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor spEditor = sPrefs.edit();
-        spEditor.putInt("seek", 0);
-        spEditor.apply();
-    }
-
     @Override
     public void onBackPressed() {
 
@@ -120,11 +109,6 @@ public class MainActivity extends AppCompatActivity implements StartWindowListen
             assert fsFrag != null;
             fsFrag.loadgRepList();
         }
-        else if (inState.get("StartWindowFragment") != null) {
-            swFrag = (StartWindowFragment) fMan.getFragment(inState, "StartWindowFragment");
-            assert swFrag != null;
-            swFrag.loadSeek();
-        }
     }
 
     @Override
@@ -133,13 +117,10 @@ public class MainActivity extends AppCompatActivity implements StartWindowListen
         super.onSaveInstanceState(outState);
         srFrag = (SearchResultFragment) fMan.findFragmentByTag("srFrag");
         fsFrag = (FilmSearchFragment) fMan.findFragmentByTag("fsFrag");
-        swFrag = (StartWindowFragment) fMan.findFragmentByTag("swFrag");
         if (srFrag != null)
             fMan.putFragment(outState, "SearchResultFragment", srFrag);
         else if (fsFrag != null)
             fMan.putFragment(outState, "FilmSearchFragment", fsFrag);
-        else if (swFrag != null)
-            fMan.putFragment(outState, "StartWindowFragment", swFrag);
     }
 
     @Override
@@ -148,8 +129,6 @@ public class MainActivity extends AppCompatActivity implements StartWindowListen
         if (fMan.findFragmentByTag("srFrag") != null)
             instantiateFragments(inState);
         else if (fMan.findFragmentByTag("fsFrag") != null)
-            instantiateFragments(inState);
-        else if (fMan.findFragmentByTag("swFrag") != null)
             instantiateFragments(inState);
     }
 
