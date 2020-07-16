@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.whattowatch;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;

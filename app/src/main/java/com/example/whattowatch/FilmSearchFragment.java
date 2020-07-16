@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.whattowatch;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
