@@ -6,6 +6,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.Toast;
 import java.util.Objects;
@@ -68,6 +70,12 @@ public class MainActivity extends AppCompatActivity implements StartWindowListen
 
     @Override
     public void onGenreClicked(GenreRepository genreRepository) {
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+        else
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         srFrag = new SearchResultFragment();
         fTrans = fMan.beginTransaction();

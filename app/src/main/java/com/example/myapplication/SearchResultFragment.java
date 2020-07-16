@@ -1,5 +1,7 @@
 package com.example.myapplication;
 
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class SearchResultFragment extends Fragment {
@@ -26,7 +29,6 @@ public class SearchResultFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.search_result_list, container, false);
-
         progressBar = view.findViewById(R.id.progressbar);
         textView = view.findViewById(R.id.pleasewait);
         recyclerView = view.findViewById(R.id.sr_list);
@@ -99,7 +101,7 @@ public class SearchResultFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-
+                        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
                         progressBar.setVisibility(View.GONE);
                         textView.setVisibility(View.GONE);
                         SearchResultAdapter srAdapter = new SearchResultAdapter(getActivity(),
