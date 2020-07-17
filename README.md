@@ -32,7 +32,7 @@ Screen_5
 
 Screen_6
 
-![screen_6](https://github.com/blackcanary23/screens/blob/master/20200716_195218.jpg.jpg)
+![screen_6](https://github.com/blackcanary23/screens/blob/master/20200716_195218.jpg)
 
 Screen_7
 
