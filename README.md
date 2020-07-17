@@ -48,7 +48,7 @@ Screen_9
 
 Screen_10
 
-![screen_10](https://github.com/blackcanary23/screens/blob/master/20200716_195127.jpg)
+![screen_10](https://github.com/blackcanary23/screens/blob/master/Screenshot_20200716-223631_Samsung Internet.jpg)
 
 
 
