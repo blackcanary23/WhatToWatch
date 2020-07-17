@@ -32,7 +32,7 @@ Screen_5
 
 Screen_6
 
-![screen_6](https://github.com/blackcanary23/screens/blob/master/8.jpg)
+![screen_6](https://github.com/blackcanary23/screens/blob/master/20200716_195218.jpg.jpg)
 
 Screen_7
 
@@ -40,7 +40,7 @@ Screen_7
 
 Screen_8
 
-![screen_8](https://github.com/blackcanary23/screens/blob/master/7.jpg)
+![screen_8](https://github.com/blackcanary23/screens/blob/master/20200716_195127.jpg)
 
 Screen_9
 
@@ -48,7 +48,7 @@ Screen_9
 
 Screen_10
 
-![screen_10](https://github.com/blackcanary23/screens/blob/master/Screenshot_20200716-223631_Samsung Internet.jpg)
+![screen_10](https://github.com/blackcanary23/screens/blob/master/10.jpg)
 
 
 
