@@ -1,4 +1,4 @@
-package com.example.whattowatch;
+package com.riwesta.whattowatch;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

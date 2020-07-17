@@ -1,4 +1,4 @@
-package com.example.whattowatch;
+package com.riwesta.whattowatch;
 
 public interface StartWindowListener {
 

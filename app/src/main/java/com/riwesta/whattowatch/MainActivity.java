@@ -1,4 +1,4 @@
-package com.example.whattowatch;
+package com.riwesta.whattowatch;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
