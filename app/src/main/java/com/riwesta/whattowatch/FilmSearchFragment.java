@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class FilmSearchFragment extends Fragment {
@@ -54,7 +55,7 @@ public class FilmSearchFragment extends Fragment {
 
             if (name.contains("best") || name.contains("cannes") || name.contains("new")) {
                 image = getResources().getIdentifier(name, "drawable",
-                        "com.example.myapplication");
+                        Objects.requireNonNull(getActivity()).getPackageName());
                 gRepList.add(new GenreRepository(name.replace("_", "-"), image));
             }
         }

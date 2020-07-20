@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.example.whattowatch",
+  "applicationId": "com.riwesta.whattowatch",
   "variantName": "release",
   "elements": [
     {
@@ -14,7 +14,7 @@
       "versionCode": 1,
       "versionName": "1.0",
       "enabled": true,
-      "outputFile": "app-release.apk"
+      "outputFile": "wtw.apk"
     }
   ]
 }
