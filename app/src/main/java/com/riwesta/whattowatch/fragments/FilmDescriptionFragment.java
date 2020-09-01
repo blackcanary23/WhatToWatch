@@ -1,4 +1,4 @@
-package com.riwesta.whattowatch;
+package com.riwesta.whattowatch.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import com.riwesta.whattowatch.R;
 
 
 public class FilmDescriptionFragment extends Fragment {

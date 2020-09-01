@@ -1,4 +1,4 @@
-package com.riwesta.whattowatch;
+package com.riwesta.whattowatch.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +8,16 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.Toast;
+import com.riwesta.whattowatch.R;
+import com.riwesta.whattowatch.StartWindowListener;
+import com.riwesta.whattowatch.adapters.FilmSearchAdapter;
+import com.riwesta.whattowatch.adapters.SearchResultAdapter;
+import com.riwesta.whattowatch.fragments.FilmDescriptionFragment;
+import com.riwesta.whattowatch.fragments.FilmSearchFragment;
+import com.riwesta.whattowatch.fragments.SearchResultFragment;
+import com.riwesta.whattowatch.fragments.StartWindowFragment;
+import com.riwesta.whattowatch.repositories.GenreRepository;
+import com.riwesta.whattowatch.repositories.MoviesRepository;
 import java.util.Objects;
 
 
@@ -27,7 +37,22 @@ public class MainActivity extends AppCompatActivity implements StartWindowListen
 
         fMan = getSupportFragmentManager();
 
-        if (fMan.findFragmentByTag("swFrag") == null) {
+        if (savedInstanceState != null) {
+
+            if (fMan.getFragment(savedInstanceState,
+                    "CurrentFragment") instanceof SearchResultFragment) {
+                srFrag = (SearchResultFragment) fMan.getFragment(savedInstanceState,
+                        "CurrentFragment");
+            }
+
+            else if (fMan.getFragment(savedInstanceState,
+                    "CurrentFragment") instanceof FilmSearchFragment) {
+                fsFrag = (FilmSearchFragment) fMan.getFragment(savedInstanceState,
+                        "CurrentFragment");
+            }
+        }
+
+        else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             Toast.makeText(this, "Swipe Left to Skip", Toast.LENGTH_LONG).show();
             StartWindowFragment swFrag = new StartWindowFragment();
@@ -95,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements StartWindowListen
         }
     }
 
-    private void instantiateFragments(Bundle inState) {
+    /*private void instantiateFragments(Bundle inState) {
 
         fTrans = fMan.beginTransaction();
 
@@ -109,28 +134,24 @@ public class MainActivity extends AppCompatActivity implements StartWindowListen
             assert fsFrag != null;
             fsFrag.loadgRepList();
         }
-    }
+    }*/
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
 
         super.onSaveInstanceState(outState);
-        srFrag = (SearchResultFragment) fMan.findFragmentByTag("srFrag");
-        fsFrag = (FilmSearchFragment) fMan.findFragmentByTag("fsFrag");
-        if (srFrag != null)
-            fMan.putFragment(outState, "SearchResultFragment", srFrag);
-        else if (fsFrag != null)
-            fMan.putFragment(outState, "FilmSearchFragment", fsFrag);
+        fMan.putFragment(outState, "CurrentFragment",
+                Objects.requireNonNull(fMan.findFragmentById(R.id.container)));
     }
 
-    @Override
+    /*@Override
     protected void onRestoreInstanceState(@NonNull Bundle inState) {
 
         if (fMan.findFragmentByTag("srFrag") != null)
             instantiateFragments(inState);
         else if (fMan.findFragmentByTag("fsFrag") != null)
             instantiateFragments(inState);
-    }
+    }*/
 
     @Override
     protected void onPause(){

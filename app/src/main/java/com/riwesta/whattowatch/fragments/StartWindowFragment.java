@@ -1,4 +1,4 @@
-package com.riwesta.whattowatch;
+package com.riwesta.whattowatch.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -27,6 +27,9 @@ import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
+import com.riwesta.whattowatch.OnSwipeTouchListener;
+import com.riwesta.whattowatch.R;
+import com.riwesta.whattowatch.StartWindowListener;
 import org.apache.commons.io.FilenameUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;

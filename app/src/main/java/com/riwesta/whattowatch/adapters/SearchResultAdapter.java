@@ -1,4 +1,4 @@
-package com.riwesta.whattowatch;
+package com.riwesta.whattowatch.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.riwesta.whattowatch.R;
+import com.riwesta.whattowatch.repositories.MoviesRepository;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 

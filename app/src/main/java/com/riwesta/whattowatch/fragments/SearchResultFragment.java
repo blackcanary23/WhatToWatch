@@ -1,7 +1,9 @@
-package com.riwesta.whattowatch;
+package com.riwesta.whattowatch.fragments;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import com.riwesta.whattowatch.repositories.MoviesRepository;
+import com.riwesta.whattowatch.R;
+import com.riwesta.whattowatch.adapters.SearchResultAdapter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.util.ArrayList;
@@ -33,6 +38,14 @@ public class SearchResultFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null)
+            mRepList = (ArrayList<MoviesRepository>) savedInstanceState.getSerializable("srList");
     }
 
     public void getMoviesList(final String urlName) {
@@ -88,7 +101,7 @@ public class SearchResultFragment extends Fragment {
 
                         mRepList.add(new MoviesRepository(id, name, year, rate, logo, image, imdb));
                     }
-                    savemRepList();
+                    //savemRepList();
                 }
                 catch (Exception e) {
                     System.out.println("Error : " + e.getMessage() + "\n");
@@ -113,8 +126,13 @@ public class SearchResultFragment extends Fragment {
         t.start();
     }
 
-    @SuppressWarnings("unchecked")
-    void loadmRepList() {
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("srList", mRepList);
+    }
+
+    /*void loadmRepList() {
 
         Bundle bundle = getArguments();
         assert bundle != null;
@@ -124,12 +142,12 @@ public class SearchResultFragment extends Fragment {
         textView.setVisibility(View.GONE);
         SearchResultAdapter srAdapter = new SearchResultAdapter(getActivity(), mRepList);
         recyclerView.setAdapter(srAdapter);
-    }
+    }*/
 
-    void savemRepList() {
+    /*void savemRepList() {
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("mRepList", mRepList);
         setArguments(bundle);
-    }
+    }*/
 }

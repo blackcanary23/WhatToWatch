@@ -1,7 +1,8 @@
-package com.riwesta.whattowatch;
+package com.riwesta.whattowatch.fragments;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -11,6 +12,9 @@ import java.lang.reflect.Field;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.riwesta.whattowatch.repositories.GenreRepository;
+import com.riwesta.whattowatch.R;
+import com.riwesta.whattowatch.adapters.FilmSearchAdapter;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -41,7 +45,10 @@ public class FilmSearchFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 
         super.onActivityCreated(savedInstanceState);
-        getCriterion();
+        if (savedInstanceState != null)
+            gRepList = (ArrayList<GenreRepository>) savedInstanceState.getSerializable("fsList");
+        else
+            getCriterion();
     }
 
     public void getCriterion() {
@@ -59,21 +66,26 @@ public class FilmSearchFragment extends Fragment {
                 gRepList.add(new GenreRepository(name.replace("_", "-"), image));
             }
         }
-        savegRepList();
+        //savegRepList();
     }
 
-    @SuppressWarnings("unchecked")
-    void loadgRepList() {
+    /*void loadgRepList() {
 
         Bundle bundle = getArguments();
         assert bundle != null;
         gRepList = (ArrayList<GenreRepository>) bundle.getSerializable("fsList");
+    }*/
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("fsList", gRepList);
     }
 
-    void savegRepList() {
+    /*void savegRepList() {
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("fsList", gRepList);
         setArguments(bundle);
-    }
+    }*/
 }

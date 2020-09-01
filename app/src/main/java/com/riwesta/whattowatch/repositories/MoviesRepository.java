@@ -1,4 +1,4 @@
-package com.riwesta.whattowatch;
+package com.riwesta.whattowatch.repositories;
 
 import java.io.Serializable;
 
