@@ -18,6 +18,7 @@ import com.riwesta.whattowatch.adapters.SearchResultAdapter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.util.ArrayList;
+import java.util.Set;
 
 
 public class SearchResultFragment extends Fragment {
@@ -28,12 +29,34 @@ public class SearchResultFragment extends Fragment {
     private TextView textView;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mRepList = (ArrayList<MoviesRepository>) savedInstanceState.getSerializable("srList");
+            //Log.d("MyLogs","onCreatenotnull");
+        }
+        else {
+            Bundle bundle = getArguments();
+            assert bundle != null;
+            String genre = (String) bundle.getSerializable("genre");
+            getMoviesList(genre);
+        }
+
+        //Log.d("MyLogs","onCreate");
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.search_result_list, container, false);
+        //Log.d("MyLogs","onCreateView");
+
         progressBar = view.findViewById(R.id.progressbar);
         textView = view.findViewById(R.id.pleasewait);
+
+        setProgressVisibility();
+
         recyclerView = view.findViewById(R.id.sr_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -44,16 +67,23 @@ public class SearchResultFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null)
+        if (savedInstanceState != null) {
             mRepList = (ArrayList<MoviesRepository>) savedInstanceState.getSerializable("srList");
+            //Log.d("MyLogs","onActivitynotnull");
+        }
+
+        //Log.d("MyLogs","onActivityCreated");
+        SearchResultAdapter srAdapter = new SearchResultAdapter(getActivity(), mRepList);
+        recyclerView.setAdapter(srAdapter);
     }
 
-    public void getMoviesList(final String urlName) {
+    void getMoviesList(final String urlName) {
 
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
 
+                mRepList.clear();
                 String id, name, year, rate, logo, image, imdb;
                 String query;
 
@@ -101,7 +131,6 @@ public class SearchResultFragment extends Fragment {
 
                         mRepList.add(new MoviesRepository(id, name, year, rate, logo, image, imdb));
                     }
-                    //savemRepList();
                 }
                 catch (Exception e) {
                     System.out.println("Error : " + e.getMessage() + "\n");
@@ -116,38 +145,32 @@ public class SearchResultFragment extends Fragment {
                                 .SCREEN_ORIENTATION_UNSPECIFIED);
                         progressBar.setVisibility(View.GONE);
                         textView.setVisibility(View.GONE);
-                        SearchResultAdapter srAdapter = new SearchResultAdapter(getActivity(),
-                                mRepList);
+                        SearchResultAdapter srAdapter = new SearchResultAdapter(getActivity(), mRepList);
                         recyclerView.setAdapter(srAdapter);
                     }
                 });
             }
-        });
+        }, "MyThread");
         t.start();
+    }
+
+    void setProgressVisibility() {
+
+        Set<Thread> threads = Thread.getAllStackTraces().keySet();
+        for (Thread t : threads) {
+            String name = t.getName();
+            if (name.equals("MyThread")) {
+                progressBar.setVisibility(View.VISIBLE);
+                textView.setVisibility(View.VISIBLE);
+                break;
+            }
+        }
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("srList", mRepList);
+        //Log.d("MyLogs","onSave" + mRepList.size());
     }
-
-    /*void loadmRepList() {
-
-        Bundle bundle = getArguments();
-        assert bundle != null;
-        mRepList = (ArrayList<MoviesRepository>) bundle.getSerializable(
-                "mRepList");
-        progressBar.setVisibility(View.GONE);
-        textView.setVisibility(View.GONE);
-        SearchResultAdapter srAdapter = new SearchResultAdapter(getActivity(), mRepList);
-        recyclerView.setAdapter(srAdapter);
-    }*/
-
-    /*void savemRepList() {
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("mRepList", mRepList);
-        setArguments(bundle);
-    }*/
 }

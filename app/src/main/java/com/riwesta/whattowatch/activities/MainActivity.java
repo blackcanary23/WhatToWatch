@@ -2,6 +2,7 @@ package com.riwesta.whattowatch.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import android.content.pm.ActivityInfo;
@@ -39,16 +40,14 @@ public class MainActivity extends AppCompatActivity implements StartWindowListen
 
         if (savedInstanceState != null) {
 
-            if (fMan.getFragment(savedInstanceState,
-                    "CurrentFragment") instanceof SearchResultFragment) {
+            if (fMan.getFragment(savedInstanceState,"SearchResultFragment") != null) {
                 srFrag = (SearchResultFragment) fMan.getFragment(savedInstanceState,
-                        "CurrentFragment");
+                        "SearchResultFragment");
             }
 
-            else if (fMan.getFragment(savedInstanceState,
-                    "CurrentFragment") instanceof FilmSearchFragment) {
+            else if (fMan.getFragment(savedInstanceState,"FilmSearchFragment") != null) {
                 fsFrag = (FilmSearchFragment) fMan.getFragment(savedInstanceState,
-                        "CurrentFragment");
+                        "FilmSearchFragment");
             }
         }
 
@@ -68,25 +67,6 @@ public class MainActivity extends AppCompatActivity implements StartWindowListen
         fsFrag = new FilmSearchFragment();
         fTrans = fMan.beginTransaction();
         fTrans.replace(R.id.container, fsFrag, "fsFrag");
-        fTrans.addToBackStack(null);
-        fTrans.commitAllowingStateLoss();
-    }
-
-    @Override
-    public void onMovieClicked(MoviesRepository moviesRepository) {
-
-        FilmDescriptionFragment fdFrag = new FilmDescriptionFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("imdb", moviesRepository.getImdb());
-        fdFrag.setArguments(bundle);
-
-        fTrans = fMan.beginTransaction();
-
-        if (fdFrag.isAdded()) {
-            fTrans.remove(fdFrag);
-        }
-
-        fTrans.add(fdFrag, "fdFrag");
         fTrans.commitAllowingStateLoss();
     }
 
@@ -100,65 +80,40 @@ public class MainActivity extends AppCompatActivity implements StartWindowListen
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         srFrag = new SearchResultFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("genre", genreRepository.getName());
+        srFrag.setArguments(bundle);
+
         fTrans = fMan.beginTransaction();
-        srFrag.getMoviesList(genreRepository.getName());
         fTrans.replace(R.id.container, srFrag, "srFrag");
         fTrans.addToBackStack(null);
         fTrans.commitAllowingStateLoss();
     }
 
     @Override
-    public void onBackPressed() {
+    public void onMovieClicked(MoviesRepository moviesRepository) {
 
-        int count = fMan.getBackStackEntryCount();
-
-        if (count == 1) {
-            finish();
-        }
-        else {
-            super.onBackPressed();
-        }
-    }
-
-    /*private void instantiateFragments(Bundle inState) {
+        FilmDescriptionFragment fdFrag = new FilmDescriptionFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("imdb", moviesRepository.getImdb());
+        fdFrag.setArguments(bundle);
 
         fTrans = fMan.beginTransaction();
-
-        if (inState.get("SearchResultFragment") != null) {
-            srFrag = (SearchResultFragment) fMan.getFragment(inState, "SearchResultFragment");
-            assert srFrag != null;
-            srFrag.loadmRepList();
-        }
-        else if (inState.get("FilmSearchFragment") != null) {
-            fsFrag = (FilmSearchFragment) fMan.getFragment(inState, "FilmSearchFragment");
-            assert fsFrag != null;
-            fsFrag.loadgRepList();
-        }
-    }*/
+        fTrans.replace(R.id.container, fdFrag, "fdFrag");
+        fTrans.addToBackStack(null);
+        fTrans.commitAllowingStateLoss();
+    }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
 
         super.onSaveInstanceState(outState);
-        fMan.putFragment(outState, "CurrentFragment",
-                Objects.requireNonNull(fMan.findFragmentById(R.id.container)));
-    }
 
-    /*@Override
-    protected void onRestoreInstanceState(@NonNull Bundle inState) {
-
-        if (fMan.findFragmentByTag("srFrag") != null)
-            instantiateFragments(inState);
-        else if (fMan.findFragmentByTag("fsFrag") != null)
-            instantiateFragments(inState);
-    }*/
-
-    @Override
-    protected void onPause(){
-        super.onPause();
-        if (fMan.findFragmentByTag("fdFrag") != null) {
-            fMan.beginTransaction().remove(Objects.requireNonNull(fMan.findFragmentByTag("fdFrag"))).
-                    commit();
-        }
+        Fragment frag = fMan.findFragmentById(R.id.container);
+        if (frag instanceof FilmSearchFragment)
+            fMan.putFragment(outState, "FilmSearchFragment", Objects.requireNonNull(frag));
+        else if (frag instanceof SearchResultFragment)
+            fMan.putFragment(outState, "SearchResultFragment", Objects.requireNonNull(frag));
     }
 }

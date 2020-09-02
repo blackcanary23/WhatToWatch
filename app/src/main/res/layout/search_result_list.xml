@@ -14,7 +14,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="invisible"/>
 
     <TextView
         android:id="@+id/pleasewait"
@@ -24,7 +25,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/progressbar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="invisible"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/sr_list"

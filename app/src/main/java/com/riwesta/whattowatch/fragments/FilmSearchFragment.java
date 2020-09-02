@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.lang.reflect.Field;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,21 +23,33 @@ import java.util.Objects;
 public class FilmSearchFragment extends Fragment {
 
     private ArrayList<GenreRepository> gRepList = new ArrayList<>();
+    private RecyclerView recyclerView;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            gRepList = (ArrayList<GenreRepository>) savedInstanceState.getSerializable("fsList");
+            //Log.d("MyLogs", gRepList.size() + "notnullonCreate");
+        }
+        else {
+            getCriterion();
+            //Log.d("MyLogs", gRepList.size() + "onCreate");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        //Log.d("MyLogs", gRepList.size() + "onCreateView");
         View view = inflater.inflate(R.layout.fragment_list, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.list);
+        recyclerView = view.findViewById(R.id.list);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
             recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
         else
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        FilmSearchAdapter fsAdapter = new FilmSearchAdapter(getActivity(), gRepList);
-        recyclerView.setAdapter(fsAdapter);
 
         return view;
     }
@@ -45,14 +58,20 @@ public class FilmSearchFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null)
+        if (savedInstanceState != null) {
             gRepList = (ArrayList<GenreRepository>) savedInstanceState.getSerializable("fsList");
-        else
-            getCriterion();
+            //Log.d("MyLogs", gRepList.size() + "notnullonActivityCreate");
+        }
+        //else
+            //Log.d("MyLogs", gRepList.size() + "onActivityCreate");
+
+        FilmSearchAdapter fsAdapter = new FilmSearchAdapter(getActivity(), gRepList);
+        recyclerView.setAdapter(fsAdapter);
     }
 
-    public void getCriterion() {
+    void getCriterion() {
 
+        gRepList.clear();
         Field[] fields = R.drawable.class.getFields();
         String name;
         int image;
@@ -66,26 +85,13 @@ public class FilmSearchFragment extends Fragment {
                 gRepList.add(new GenreRepository(name.replace("_", "-"), image));
             }
         }
-        //savegRepList();
     }
-
-    /*void loadgRepList() {
-
-        Bundle bundle = getArguments();
-        assert bundle != null;
-        gRepList = (ArrayList<GenreRepository>) bundle.getSerializable("fsList");
-    }*/
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
+
         super.onSaveInstanceState(outState);
         outState.putSerializable("fsList", gRepList);
+        //Log.d("MyLogs", gRepList.size() + "onSave");
     }
-
-    /*void savegRepList() {
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("fsList", gRepList);
-        setArguments(bundle);
-    }*/
 }

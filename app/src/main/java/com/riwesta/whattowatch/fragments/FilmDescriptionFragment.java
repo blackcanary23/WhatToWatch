@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import com.riwesta.whattowatch.R;
 
 
@@ -18,23 +19,25 @@ public class FilmDescriptionFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.film_description, container, false);
+
         WebView webView = view.findViewById(R.id.webBrowser);
         webView.getSettings().setJavaScriptEnabled(true);
-
         webView.getSettings().setSupportZoom(true);
         webView.getSettings().setBuiltInZoomControls(true);
-
 
         Bundle bundle = getArguments();
         assert bundle != null;
         String imdb = (String) bundle.getSerializable("imdb");
 
         webView.loadUrl(imdb);
-        return view;
-    }
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+        return view;
     }
 }
