@@ -3,7 +3,6 @@ package com.riwesta.whattowatch.fragments;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,31 +17,29 @@ import com.riwesta.whattowatch.adapters.SearchResultAdapter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.util.ArrayList;
-import java.util.Set;
 
 
 public class SearchResultFragment extends Fragment {
 
     private ArrayList<MoviesRepository> mRepList = new ArrayList<>();
-    private RecyclerView recyclerView;
+    private SearchResultAdapter srAdapter;
     private ProgressBar progressBar;
     private TextView textView;
+    private boolean inProgress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null)
             mRepList = (ArrayList<MoviesRepository>) savedInstanceState.getSerializable("srList");
-            //Log.d("MyLogs","onCreatenotnull");
-        }
         else {
             Bundle bundle = getArguments();
             assert bundle != null;
             String genre = (String) bundle.getSerializable("genre");
+            inProgress = (boolean) bundle.getSerializable("visible") ;
             getMoviesList(genre);
         }
-
-        //Log.d("MyLogs","onCreate");
     }
 
     @Override
@@ -50,36 +47,23 @@ public class SearchResultFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.search_result_list, container, false);
-        //Log.d("MyLogs","onCreateView");
-
+        RecyclerView recyclerView = view.findViewById(R.id.sr_list);
         progressBar = view.findViewById(R.id.progressbar);
         textView = view.findViewById(R.id.pleasewait);
 
-        setProgressVisibility();
-
-        recyclerView = view.findViewById(R.id.sr_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        if (inProgress)
+            setProgressVisible();
+
+        srAdapter = new SearchResultAdapter(getActivity(), mRepList);
+        recyclerView.setAdapter(srAdapter);
 
         return view;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            mRepList = (ArrayList<MoviesRepository>) savedInstanceState.getSerializable("srList");
-            //Log.d("MyLogs","onActivitynotnull");
-        }
-
-        //Log.d("MyLogs","onActivityCreated");
-        SearchResultAdapter srAdapter = new SearchResultAdapter(getActivity(), mRepList);
-        recyclerView.setAdapter(srAdapter);
-    }
-
     void getMoviesList(final String urlName) {
 
-        Thread t = new Thread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
 
@@ -143,34 +127,33 @@ public class SearchResultFragment extends Fragment {
                     public void run() {
                         getActivity().setRequestedOrientation(ActivityInfo
                                 .SCREEN_ORIENTATION_UNSPECIFIED);
-                        progressBar.setVisibility(View.GONE);
-                        textView.setVisibility(View.GONE);
-                        SearchResultAdapter srAdapter = new SearchResultAdapter(getActivity(), mRepList);
-                        recyclerView.setAdapter(srAdapter);
+                        setProgressGone();
+                        srAdapter.notifyDataSetChanged();
                     }
                 });
             }
-        }, "MyThread");
-        t.start();
+        }).start();
     }
 
-    void setProgressVisibility() {
+    void setProgressVisible() {
 
-        Set<Thread> threads = Thread.getAllStackTraces().keySet();
-        for (Thread t : threads) {
-            String name = t.getName();
-            if (name.equals("MyThread")) {
-                progressBar.setVisibility(View.VISIBLE);
-                textView.setVisibility(View.VISIBLE);
-                break;
-            }
-        }
+        progressBar.setVisibility(View.VISIBLE);
+        textView.setVisibility(View.VISIBLE);
+
+        inProgress = false;
+    }
+
+    void setProgressGone() {
+
+        progressBar.setVisibility(View.GONE);
+        textView.setVisibility(View.GONE);
+
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
+
         super.onSaveInstanceState(outState);
         outState.putSerializable("srList", mRepList);
-        //Log.d("MyLogs","onSave" + mRepList.size());
     }
 }

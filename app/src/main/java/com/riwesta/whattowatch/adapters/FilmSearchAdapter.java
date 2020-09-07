@@ -58,7 +58,7 @@ public class FilmSearchAdapter extends RecyclerView.Adapter<FilmSearchAdapter.Vi
         return gRepList.size();
     }
 
-    public void editMovieName(int position) {
+    void editMovieName(int position) {
 
         showName = gRepList.get(position).getName().replace("-", " ");
         if (showName.contains("1970 1979"))

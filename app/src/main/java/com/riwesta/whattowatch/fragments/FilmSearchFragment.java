@@ -3,7 +3,6 @@ package com.riwesta.whattowatch.fragments;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,10 +22,10 @@ import java.util.Objects;
 public class FilmSearchFragment extends Fragment {
 
     private ArrayList<GenreRepository> gRepList = new ArrayList<>();
-    private RecyclerView recyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             gRepList = (ArrayList<GenreRepository>) savedInstanceState.getSerializable("fsList");
@@ -44,29 +43,17 @@ public class FilmSearchFragment extends Fragment {
 
         //Log.d("MyLogs", gRepList.size() + "onCreateView");
         View view = inflater.inflate(R.layout.fragment_list, container, false);
-        recyclerView = view.findViewById(R.id.list);
+        RecyclerView recyclerView = view.findViewById(R.id.list);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
             recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
         else
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        return view;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            gRepList = (ArrayList<GenreRepository>) savedInstanceState.getSerializable("fsList");
-            //Log.d("MyLogs", gRepList.size() + "notnullonActivityCreate");
-        }
-        //else
-            //Log.d("MyLogs", gRepList.size() + "onActivityCreate");
-
         FilmSearchAdapter fsAdapter = new FilmSearchAdapter(getActivity(), gRepList);
         recyclerView.setAdapter(fsAdapter);
+
+        return view;
     }
 
     void getCriterion() {
