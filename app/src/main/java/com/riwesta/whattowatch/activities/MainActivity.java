@@ -2,15 +2,16 @@ package com.riwesta.whattowatch.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 import com.riwesta.whattowatch.R;
 import com.riwesta.whattowatch.StartWindowListener;
 import com.riwesta.whattowatch.adapters.FilmSearchAdapter;
 import com.riwesta.whattowatch.adapters.SearchResultAdapter;
-import com.riwesta.whattowatch.fragments.FilmDescriptionFragment;
 import com.riwesta.whattowatch.fragments.FilmSearchFragment;
 import com.riwesta.whattowatch.fragments.SearchResultFragment;
 import com.riwesta.whattowatch.fragments.StartWindowFragment;
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements StartWindowListen
         fMan = getSupportFragmentManager();
 
         if (savedInstanceState == null) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             Toast.makeText(this, "Swipe Left to Skip", Toast.LENGTH_LONG).show();
             StartWindowFragment swFrag = new StartWindowFragment();
             fMan.beginTransaction()
@@ -75,15 +76,7 @@ public class MainActivity extends AppCompatActivity implements StartWindowListen
     @Override
     public void onMovieClicked(MoviesRepository moviesRepository) {
 
-        FilmDescriptionFragment fdFrag = new FilmDescriptionFragment();
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("imdb", moviesRepository.getImdb());
-        fdFrag.setArguments(bundle);
-
-        fMan.beginTransaction()
-            .replace(R.id.container, fdFrag, "fdFrag")
-            .addToBackStack(null)
-            .commitAllowingStateLoss();
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(moviesRepository.getImdb()));
+        startActivity(browserIntent);
     }
 }

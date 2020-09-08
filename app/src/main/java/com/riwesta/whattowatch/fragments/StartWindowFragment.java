@@ -55,6 +55,7 @@ public class StartWindowFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.start_window, container, false);
         playerView = view.findViewById(R.id.video_view);
+
         initializePlayer();
 
         player.addListener(new Player.EventListener() {
@@ -142,7 +143,7 @@ public class StartWindowFragment extends Fragment {
         swListener.onStartWindowListener();
     }
 
-    public void getMoviesList() {
+    void getMoviesList() {
 
         Field[] fields = R.raw.class.getFields();
         for (Field field : fields) {
@@ -150,7 +151,7 @@ public class StartWindowFragment extends Fragment {
         }
     }
 
-    private void initializePlayer() {
+    void initializePlayer() {
 
         getMoviesList();
         loadCounter();
@@ -169,7 +170,6 @@ public class StartWindowFragment extends Fragment {
                         getContext().getPackageName()));
 
 
-
         ExtractorMediaSource audioSource = new ExtractorMediaSource.Factory(new
                 DefaultDataSourceFactory(Objects.requireNonNull(getActivity()),
                 "MyApplication")).createMediaSource(uri);
@@ -179,7 +179,7 @@ public class StartWindowFragment extends Fragment {
 
     }
 
-    private void releasePlayer() {
+    void releasePlayer() {
 
         if (player != null) {
             playbackPosition = player.getCurrentPosition();
