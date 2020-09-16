@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.riwesta.whattowatch.R;
-import com.riwesta.whattowatch.repositories.GenreRepository;
+import com.riwesta.whattowatch.models.GenreRepository;
 
 import java.util.ArrayList;
 
@@ -39,7 +39,7 @@ public class FilmSearchAdapter extends RecyclerView.Adapter<FilmSearchAdapter.Vi
 
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.film_search, parent, false);
-        return new FilmSearchAdapter.ViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @SuppressLint("SetTextI18n")
@@ -47,7 +47,7 @@ public class FilmSearchAdapter extends RecyclerView.Adapter<FilmSearchAdapter.Vi
     public void onBindViewHolder(@NonNull FilmSearchAdapter.ViewHolder holder, int position) {
 
         editMovieName(position);
-        holder.itemView.setTag(gRepList.get(position));
+
         holder.name.setText(showName + " ");
         holder.image.setImageResource(gRepList.get(position).getImage());
     }
@@ -82,8 +82,8 @@ public class FilmSearchAdapter extends RecyclerView.Adapter<FilmSearchAdapter.Vi
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView name;
-        private ImageView image;
+        final TextView name;
+        final ImageView image;
 
         ViewHolder(@NonNull View itemView) {
 

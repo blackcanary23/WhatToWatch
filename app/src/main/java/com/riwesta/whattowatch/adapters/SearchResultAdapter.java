@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.riwesta.whattowatch.R;
-import com.riwesta.whattowatch.repositories.MoviesRepository;
+import com.riwesta.whattowatch.models.MoviesRepository;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
@@ -45,7 +45,6 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     @Override
     public void onBindViewHolder(@NonNull SearchResultAdapter.ViewHolder holder, int position) {
 
-        holder.itemView.setTag(movieRepList.get(position));
         holder.id.setText(movieRepList.get(position).getId() + " ");
         holder.name.setText(movieRepList.get(position).getName() + " ");
         holder.year.setText(movieRepList.get(position).getYear() + " ");
@@ -63,12 +62,12 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView id;
-        private TextView name;
-        private TextView year;
-        private TextView rate;
-        private TextView logo;
-        private ImageView image;
+        final TextView id;
+        final TextView name;
+        final TextView year;
+        final TextView rate;
+        final TextView logo;
+        final ImageView image;
 
         ViewHolder(@NonNull View itemView) {
 

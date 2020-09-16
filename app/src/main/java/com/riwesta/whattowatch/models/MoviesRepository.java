@@ -1,4 +1,4 @@
-package com.riwesta.whattowatch.repositories;
+package com.riwesta.whattowatch.models;
 
 import java.io.Serializable;
 

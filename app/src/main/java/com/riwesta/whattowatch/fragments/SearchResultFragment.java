@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import com.riwesta.whattowatch.repositories.MoviesRepository;
+import com.riwesta.whattowatch.models.MoviesRepository;
 import com.riwesta.whattowatch.R;
 import com.riwesta.whattowatch.adapters.SearchResultAdapter;
 import org.jsoup.Jsoup;

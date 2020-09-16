@@ -27,9 +27,8 @@ import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
-import com.riwesta.whattowatch.OnSwipeTouchListener;
+import com.riwesta.whattowatch.utils.OnSwipeTouchListener;
 import com.riwesta.whattowatch.R;
-import com.riwesta.whattowatch.StartWindowListener;
 import org.apache.commons.io.FilenameUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -214,5 +213,10 @@ public class StartWindowFragment extends Fragment {
         SharedPreferences.Editor spEditor = sPrefs.edit();
         spEditor.putInt("launch_ctr", launchCtr);
         spEditor.apply();
+    }
+
+    public interface StartWindowListener {
+
+        void onStartWindowListener();
     }
 }

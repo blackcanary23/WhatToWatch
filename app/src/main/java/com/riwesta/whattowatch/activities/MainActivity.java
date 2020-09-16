@@ -9,18 +9,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 import com.riwesta.whattowatch.R;
-import com.riwesta.whattowatch.StartWindowListener;
 import com.riwesta.whattowatch.adapters.FilmSearchAdapter;
 import com.riwesta.whattowatch.adapters.SearchResultAdapter;
 import com.riwesta.whattowatch.fragments.FilmSearchFragment;
 import com.riwesta.whattowatch.fragments.SearchResultFragment;
 import com.riwesta.whattowatch.fragments.StartWindowFragment;
-import com.riwesta.whattowatch.repositories.GenreRepository;
-import com.riwesta.whattowatch.repositories.MoviesRepository;
+import com.riwesta.whattowatch.models.GenreRepository;
+import com.riwesta.whattowatch.models.MoviesRepository;
 
 
-public class MainActivity extends AppCompatActivity implements StartWindowListener,
-        SearchResultAdapter.MovieClicked, FilmSearchAdapter.GenreClicked {
+public class MainActivity extends AppCompatActivity implements
+        StartWindowFragment.StartWindowListener,
+        SearchResultAdapter.MovieClicked,
+        FilmSearchAdapter.GenreClicked {
 
     private FragmentManager fMan;
 
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements StartWindowListen
         fMan = getSupportFragmentManager();
 
         if (savedInstanceState == null) {
-            //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             Toast.makeText(this, "Swipe Left to Skip", Toast.LENGTH_LONG).show();
             StartWindowFragment swFrag = new StartWindowFragment();
             fMan.beginTransaction()

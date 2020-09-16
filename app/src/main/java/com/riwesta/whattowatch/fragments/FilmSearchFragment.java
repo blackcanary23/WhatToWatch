@@ -8,10 +8,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.lang.reflect.Field;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.riwesta.whattowatch.repositories.GenreRepository;
+import com.riwesta.whattowatch.models.GenreRepository;
 import com.riwesta.whattowatch.R;
 import com.riwesta.whattowatch.adapters.FilmSearchAdapter;
 import java.util.ArrayList;
@@ -28,11 +29,11 @@ public class FilmSearchFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             gRepList = (ArrayList<GenreRepository>) savedInstanceState.getSerializable("fsList");
-            //Log.d("MyLogs", gRepList.size() + "notnullonCreate");
+            Log.d("MyLogs", gRepList.size() + "notnullonCreate");
         }
         else {
             getCriterion();
-            //Log.d("MyLogs", gRepList.size() + "onCreate");
+            Log.d("MyLogs", gRepList.size() + "onCreate");
         }
     }
 
@@ -40,7 +41,7 @@ public class FilmSearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        //Log.d("MyLogs", gRepList.size() + "onCreateView");
+        Log.d("MyLogs", gRepList.size() + "onCreateView");
         View view = inflater.inflate(R.layout.film_search_list, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.list);
 
@@ -78,6 +79,6 @@ public class FilmSearchFragment extends Fragment {
 
         super.onSaveInstanceState(outState);
         outState.putSerializable("fsList", gRepList);
-        //Log.d("MyLogs", gRepList.size() + "onSave");
+        Log.d("MyLogs", gRepList.size() + "onSave");
     }
 }

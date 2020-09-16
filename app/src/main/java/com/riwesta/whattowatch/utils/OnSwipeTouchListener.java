@@ -1,4 +1,4 @@
-package com.riwesta.whattowatch;
+package com.riwesta.whattowatch.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
