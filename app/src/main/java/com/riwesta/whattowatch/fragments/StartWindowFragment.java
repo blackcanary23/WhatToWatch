@@ -27,7 +27,7 @@ import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
-import com.riwesta.whattowatch.utils.OnSwipeTouchListener;
+import com.riwesta.whattowatch.gestures.OnSwipeTouchListener;
 import com.riwesta.whattowatch.R;
 import org.apache.commons.io.FilenameUtils;
 import java.lang.reflect.Field;
