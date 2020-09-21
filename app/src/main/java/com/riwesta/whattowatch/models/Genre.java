@@ -2,12 +2,12 @@ package com.riwesta.whattowatch.models;
 
 import java.io.Serializable;
 
-public class GenreRepository implements Serializable {
+public class Genre implements Serializable {
 
     private String name;
     private int image;
 
-    public GenreRepository(String name, int image) {
+    public Genre(String name, int image) {
 
         this.name = name;
         this.image = image;

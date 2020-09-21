@@ -10,24 +10,24 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.riwesta.whattowatch.R;
-import com.riwesta.whattowatch.models.MoviesRepository;
+import com.riwesta.whattowatch.models.Movie;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 
 public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.ViewHolder> {
 
-    private ArrayList<MoviesRepository> movieRepList;
+    private ArrayList<Movie> movieList;
     private MovieClicked activity;
 
     public interface MovieClicked {
 
-        void onMovieClicked(MoviesRepository moviesRepository);
+        void onMovieClicked(Movie moviesRepository);
     }
 
-    public SearchResultAdapter(Context context, ArrayList<MoviesRepository> movieRepList) {
+    public SearchResultAdapter(Context context, ArrayList<Movie> movieList) {
 
-        this.movieRepList = movieRepList;
+        this.movieList = movieList;
         activity = (MovieClicked) context;
     }
 
@@ -45,18 +45,18 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     @Override
     public void onBindViewHolder(@NonNull SearchResultAdapter.ViewHolder holder, int position) {
 
-        holder.id.setText(movieRepList.get(position).getId() + " ");
-        holder.name.setText(movieRepList.get(position).getName() + " ");
-        holder.year.setText(movieRepList.get(position).getYear() + " ");
-        holder.rate.setText(movieRepList.get(position).getRate());
-        holder.logo.setText(movieRepList.get(position).getLogo());
-        Picasso.get().load(movieRepList.get(position).getImage()).into(holder.image);
+        holder.id.setText(movieList.get(position).getId() + " ");
+        holder.name.setText(movieList.get(position).getName() + " ");
+        holder.year.setText(movieList.get(position).getYear() + " ");
+        holder.rate.setText(movieList.get(position).getRate());
+        holder.logo.setText(movieList.get(position).getLogo());
+        Picasso.get().load(movieList.get(position).getImage()).into(holder.image);
     }
 
     @Override
     public int getItemCount() {
 
-        return movieRepList.size();
+        return movieList.size();
     }
 
 
@@ -85,7 +85,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
                 @Override
                 public void onClick(View view) {
 
-                    activity.onMovieClicked(movieRepList.get(getAdapterPosition()));
+                    activity.onMovieClicked(movieList.get(getAdapterPosition()));
 
                 }
             });

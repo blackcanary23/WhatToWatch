@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import com.riwesta.whattowatch.models.MoviesRepository;
+import com.riwesta.whattowatch.models.Movie;
 import com.riwesta.whattowatch.R;
 import com.riwesta.whattowatch.adapters.SearchResultAdapter;
 import org.jsoup.Jsoup;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class SearchResultFragment extends Fragment {
 
-    private ArrayList<MoviesRepository> mRepList = new ArrayList<>();
+    private ArrayList<Movie> movieList = new ArrayList<>();
     private SearchResultAdapter srAdapter;
     private ProgressBar progressBar;
     private TextView textView;
@@ -32,13 +32,14 @@ public class SearchResultFragment extends Fragment {
 
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null)
-            mRepList = (ArrayList<MoviesRepository>) savedInstanceState.getSerializable("srList");
+            movieList = (ArrayList<Movie>) savedInstanceState
+                        .getSerializable("movieList");
         else {
             Bundle bundle = getArguments();
             assert bundle != null;
             String genre = (String) bundle.getSerializable("genre");
             inProgress = (boolean) bundle.getSerializable("visible") ;
-            getMoviesList(genre);
+            getMovieList(genre);
         }
     }
 
@@ -55,19 +56,19 @@ public class SearchResultFragment extends Fragment {
         if (inProgress)
             setProgressVisible();
 
-        srAdapter = new SearchResultAdapter(getActivity(), mRepList);
+        srAdapter = new SearchResultAdapter(getActivity(), movieList);
         recyclerView.setAdapter(srAdapter);
 
         return view;
     }
 
-    void getMoviesList(final String urlName) {
+    void getMovieList(final String urlName) {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
 
-                mRepList.clear();
+                movieList.clear();
                 String id, name, year, rate, logo, image, imdb;
                 String query;
 
@@ -113,7 +114,7 @@ public class SearchResultFragment extends Fragment {
                         image = "https://goodmovieslist.com/best-movies/" + doc.select(
                                 "img[class=poster]").eq(i).attr("src");
 
-                        mRepList.add(new MoviesRepository(id, name, year, rate, logo, image, imdb));
+                        movieList.add(new Movie(id, name, year, rate, logo, image, imdb));
                     }
                 }
                 catch (Exception e) {
@@ -154,6 +155,6 @@ public class SearchResultFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
 
         super.onSaveInstanceState(outState);
-        outState.putSerializable("srList", mRepList);
+        outState.putSerializable("movieList", movieList);
     }
 }

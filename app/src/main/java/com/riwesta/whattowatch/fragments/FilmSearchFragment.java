@@ -8,11 +8,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.lang.reflect.Field;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.riwesta.whattowatch.models.GenreRepository;
+import com.riwesta.whattowatch.models.Genre;
 import com.riwesta.whattowatch.R;
 import com.riwesta.whattowatch.adapters.FilmSearchAdapter;
 import java.util.ArrayList;
@@ -21,19 +20,20 @@ import java.util.Objects;
 
 public class FilmSearchFragment extends Fragment {
 
-    private ArrayList<GenreRepository> gRepList = new ArrayList<>();
+    private ArrayList<Genre> genreList = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            gRepList = (ArrayList<GenreRepository>) savedInstanceState.getSerializable("fsList");
-            Log.d("MyLogs", gRepList.size() + "notnullonCreate");
+            genreList = (ArrayList<Genre>) savedInstanceState
+                        .getSerializable("genreList");
+            //Log.d("MyLogs", genreList.size() + "notnullonCreate");
         }
         else {
-            getCriterion();
-            Log.d("MyLogs", gRepList.size() + "onCreate");
+            getGenreList();
+            //Log.d("MyLogs", genreList.size() + "onCreate");
         }
     }
 
@@ -41,7 +41,7 @@ public class FilmSearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Log.d("MyLogs", gRepList.size() + "onCreateView");
+        //Log.d("MyLogs", genreList.size() + "onCreateView");
         View view = inflater.inflate(R.layout.film_search_list, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.list);
 
@@ -50,26 +50,26 @@ public class FilmSearchFragment extends Fragment {
         else
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        FilmSearchAdapter fsAdapter = new FilmSearchAdapter(getActivity(), gRepList);
+        FilmSearchAdapter fsAdapter = new FilmSearchAdapter(getActivity(), genreList);
         recyclerView.setAdapter(fsAdapter);
 
         return view;
     }
 
-    void getCriterion() {
+    private void getGenreList() {
 
-        gRepList.clear();
-        Field[] fields = R.drawable.class.getFields();
+        genreList.clear();
+        Field[] genres = R.drawable.class.getFields();
         String name;
         int image;
 
-        for (Field field : fields) {
-            name = field.getName();
+        for (Field genre : genres) {
+            name = genre.getName();
 
             if (name.contains("best") || name.contains("cannes") || name.contains("new")) {
                 image = getResources().getIdentifier(name, "drawable",
                         Objects.requireNonNull(getActivity()).getPackageName());
-                gRepList.add(new GenreRepository(name.replace("_", "-"), image));
+                genreList.add(new Genre(name.replace("_", "-"), image));
             }
         }
     }
@@ -78,7 +78,7 @@ public class FilmSearchFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
 
         super.onSaveInstanceState(outState);
-        outState.putSerializable("fsList", gRepList);
-        Log.d("MyLogs", gRepList.size() + "onSave");
+        outState.putSerializable("genreList", genreList);
+        //Log.d("MyLogs", genreList.size() + "onSave");
     }
 }

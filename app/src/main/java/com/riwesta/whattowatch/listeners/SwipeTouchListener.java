@@ -1,4 +1,4 @@
-package com.riwesta.whattowatch.gestures;
+package com.riwesta.whattowatch.listeners;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,11 +9,11 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 
 
-public class OnSwipeTouchListener implements OnTouchListener {
+public class SwipeTouchListener implements OnTouchListener {
 
     private final GestureDetector gestureDetector;
 
-    public OnSwipeTouchListener (Context context) {
+    public SwipeTouchListener(Context context) {
 
         gestureDetector = new GestureDetector(context, new GestureListener());
     }

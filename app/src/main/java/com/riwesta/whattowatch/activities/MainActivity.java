@@ -14,8 +14,8 @@ import com.riwesta.whattowatch.adapters.SearchResultAdapter;
 import com.riwesta.whattowatch.fragments.FilmSearchFragment;
 import com.riwesta.whattowatch.fragments.SearchResultFragment;
 import com.riwesta.whattowatch.fragments.StartWindowFragment;
-import com.riwesta.whattowatch.models.GenreRepository;
-import com.riwesta.whattowatch.models.MoviesRepository;
+import com.riwesta.whattowatch.models.Genre;
+import com.riwesta.whattowatch.models.Movie;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onGenreClicked(GenreRepository genreRepository) {
+    public void onGenreClicked(Genre genre) {
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements
         SearchResultFragment srFrag = new SearchResultFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable("genre", genreRepository.getName());
+        bundle.putSerializable("genre", genre.getName());
         bundle.putSerializable("visible", true);
         srFrag.setArguments(bundle);
 
@@ -75,9 +75,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onMovieClicked(MoviesRepository moviesRepository) {
+    public void onMovieClicked(Movie movie) {
 
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(moviesRepository.getImdb()));
-        startActivity(browserIntent);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(movie.getImdb()));
+        startActivity(intent);
     }
 }

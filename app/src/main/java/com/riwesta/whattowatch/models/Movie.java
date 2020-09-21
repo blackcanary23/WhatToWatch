@@ -3,7 +3,7 @@ package com.riwesta.whattowatch.models;
 import java.io.Serializable;
 
 
-public class MoviesRepository implements Serializable {
+public class Movie implements Serializable {
 
     private String id;
     private String name;
@@ -13,8 +13,8 @@ public class MoviesRepository implements Serializable {
     private String image;
     private String imdb;
 
-    public MoviesRepository(String id, String name, String year, String rate, String logo,
-                            String image, String imdb) {
+    public Movie(String id, String name, String year, String rate, String logo,
+                 String image, String imdb) {
 
         this.id = id;
         this.name = name;

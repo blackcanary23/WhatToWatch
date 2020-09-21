@@ -10,25 +10,24 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.riwesta.whattowatch.R;
-import com.riwesta.whattowatch.models.GenreRepository;
-
+import com.riwesta.whattowatch.models.Genre;
 import java.util.ArrayList;
 
 
 public class FilmSearchAdapter extends RecyclerView.Adapter<FilmSearchAdapter.ViewHolder> {
 
-    private ArrayList<GenreRepository> gRepList;
+    private ArrayList<Genre> genreList;
     private GenreClicked activity;
     private String showName;
 
     public interface GenreClicked {
 
-        void onGenreClicked(GenreRepository fsRepository);
+        void onGenreClicked(Genre fsRepository);
     }
 
-    public FilmSearchAdapter(Context context, ArrayList<GenreRepository> gRepList) {
+    public FilmSearchAdapter(Context context, ArrayList<Genre> genreList) {
 
-        this.gRepList = gRepList;
+        this.genreList = genreList;
         activity = (GenreClicked) context;
     }
 
@@ -49,18 +48,18 @@ public class FilmSearchAdapter extends RecyclerView.Adapter<FilmSearchAdapter.Vi
         editMovieName(position);
 
         holder.name.setText(showName + " ");
-        holder.image.setImageResource(gRepList.get(position).getImage());
+        holder.image.setImageResource(genreList.get(position).getImage());
     }
 
     @Override
     public int getItemCount() {
 
-        return gRepList.size();
+        return genreList.size();
     }
 
     void editMovieName(int position) {
 
-        showName = gRepList.get(position).getName().replace("-", " ");
+        showName = genreList.get(position).getName().replace("-", " ");
         if (showName.contains("1970 1979"))
             showName = showName.replace("1970 1979", "70's");
         else if (showName.contains("1980 1989"))
@@ -97,7 +96,7 @@ public class FilmSearchAdapter extends RecyclerView.Adapter<FilmSearchAdapter.Vi
                 @Override
                 public void onClick(View view) {
 
-                    activity.onGenreClicked(gRepList.get(getAdapterPosition()));
+                    activity.onGenreClicked(genreList.get(getAdapterPosition()));
 
                 }
             });
